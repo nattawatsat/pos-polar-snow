@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>Payment Complete</title>
+  <style>
+    body {
+
+      color: #6f7cff;
+      font-family: "Prompt", sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
+      text-align: center;
+    }
+    h1 {
+      font-size: 60px;
+      margin-bottom: 20px;
+    }
+    p {
+      font-size: 28px;
+    }
+  </style>
+  <script>
+    setTimeout(() => {
+      window.location.href = "/cashier";
+    }, <%= (typeof redirectSec !== 'undefined' ? redirectSec : 5) * 1000 %>); // กลับหน้า cashier อัตโนมัติ
+  </script>
+</head>
+<body>
+  <h1>💳 Payment Complete!</h1>
+  <p>โต๊ะ <%= table_id %> ชำระเงินเรียบร้อยแล้ว</p>
+  <p>ยอดรวม: <%= amount %> บาท</p>
+  <p>ระบบจะพากลับไปหน้า Cashier อัตโนมัติ</p>
+</body>
+</html>

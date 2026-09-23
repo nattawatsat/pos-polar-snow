@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>Cashier - โต๊ะ <%= table_id %></title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #fff8f4;
+      font-family: "Prompt", sans-serif;
+    }
+    .cashier-container {
+      max-width: 800px;
+      margin: auto;
+      background: #fff;
+      border: 2px solid #d9b8a3;
+      border-radius: 12px;
+      padding: 20px;
+    }
+    .order-card {
+      background: #6f7cff;
+      color: white;
+      border-radius: 12px;
+      padding: 15px;
+      margin-bottom: 20px;
+    }
+    .order-title {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .order-items {
+      background: #f0f0ff;
+      border-radius: 10px;
+      padding: 10px;
+      margin-top: 10px;
+      color: black;
+    }
+    .btn-delete {
+      background-color: #ff6b6b;
+      border: none;
+      padding: 5px 15px;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.2s;
+      text-decoration: none;
+    }
+    .btn-delete:hover {
+      background-color: #e63946;
+    }
+
+    .floating-btn {
+      position: fixed;
+      top: 50%;
+      right: 20px;
+      transform: translateY(-50%);
+      background-color: #f79ac0;
+      color: #fff;
+      font-weight: bold;
+      padding: 45px 60px;  
+      font-size: 22px;
+      border-radius: 15px;
+      border: none;
+      box-shadow: 0px 6px 12px rgba(0,0,0,0.2);
+      z-index: 999;
+    }
+    .floating-btn:hover {
+      background-color: #e36a9a;
+    }
+    .grand-total {
+      font-size: 28px;
+      font-weight: bold;
+      text-align: center;
+      margin-top: 20px;
+      color: #6f7cff;
+    }
+    .note-text {
+    display: block;
+    white-space: normal;     
+    word-wrap: break-word;  
+    max-width: 300px;       
+  }
+  </style>
+</head>
+<body>
+  <div class="cashier-container">
+    <h2 class="text-center mb-4">โต๊ะ <%= table_id %> - รายการที่สั่ง</h2>
+
+    <% if (rows.length === 0) { %>
+      <p class="text-center">ยังไม่มีการสั่งสินค้า</p>
+    <% } else { %>
+      <% let grandTotal = 0; %>
+      <% rows.forEach((order, index) => { %>
+        <div class="order-card">
+          <div class="order-title">
+            <span>ออเดอร์ที่ <%= index+1 %> (สถานะ: <%= order.status %>)</span>
+            <!-- ปุ่มลบออเดอร์ พร้อม confirm -->
+            <a href="/cashier-delete-order?order_id=<%= order.order_id %>&table_id=<%= table_id %>" 
+   class="btn-delete"
+   onclick="return confirm('คุณแน่ใจหรือไม่ว่าต้องการลบออเดอร์นี้?')">
+  ลบ
+</a>
+
+          </div>
+          <div class="order-items">
+            <% order.items.forEach(item => { %>
+              <p>
+                • <%= item.food_name %> 
+                <% if (item.size_name) { %> (<%= item.size_name %>) <% } %>
+                - <%= item.price %> บาท
+              </p>
+              <% if (item.toppings.length > 0) { %>
+                <small>ท็อปปิ้ง: <%= item.toppings.join(", ") %></small><br>
+              <% } %>
+              <% if (item.note) { %>
+                <small class="note-text">หมายเหตุ: <%= item.note %></small><br>
+              <% } %>
+            <% }) %>
+            <hr>
+            <p><strong>รวม: <%= order.total %> บาท</strong></p>
+            <% grandTotal += order.total; %>
+          </div>
+        </div>
+      <% }) %>
+
+      <!-- ยอดรวมทั้งหมด -->
+      <div class="grand-total">
+        ยอดรวมทั้งหมด: <%= grandTotal %> บาท
+      </div>
+    <% } %>
+  </div>
+
+  <form action="/payment/<%= table_id %>" method="POST">
+    <button type="submit" class="floating-btn">💳 ชำระเงิน</button>
+  </form>
+  <div class="text-center mt-4">
+  <a href="/cashier" class="btn btn-secondary" style="font-size:20px; padding:12px 30px; border-radius:12px;">
+     กลับไปหน้าเลือกโต๊ะ
+  </a>
+</div>
+</body>
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="apple-touch-icon" href="/img/logo.jfif">
+  <title>ปรับแต่งสินค้า</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="p-3">
+  <div class="container-fluid">
+    <div class="row">
+      <!-- ซ้าย -->
+      <div class="col-md-4 text-center">
+        <h4 class="mb-3">ปรับแต่ง</h4>
+        <img src="<%= food.food_pic %>" alt="<%= food.food_name %>" class="img-fluid mb-3" style="max-height:200px;">
+        <h5><%= food.food_name %></h5>
+        <p>ราคา: <%= food.food_price %> บาท</p>
+
+        <label for="note" class="mt-3">หมายเหตุ</label>
+        <textarea class="form-control mb-2" name="note" form="cartForm" placeholder="ใส่หมายเหตุ..."><%= note || "" %></textarea>
+
+        <!-- ปุ่มบันทึก -->
+        <button type="submit" form="cartForm" class="btn btn-pink w-100 mb-2">
+          <%= cart_id ? "บันทึกการแก้ไข" : "เพิ่มสินค้า" %>
+        </button>
+
+        <!-- ปุ่มยกเลิก -->
+        <a href="<%= cart_id ? '/cart/' + table_id : '/menu/' + table_id %>" class="btn btn-secondary w-100">
+          <%= cart_id ? "ยกเลิกการแก้ไข" : "ยกเลิกการสั่ง" %>
+        </a>
+      </div>
+
+      <!-- ขวา -->
+      <div class="col-md-8 backcol p-3">
+        <form id="cartForm" action="<%= cart_id ? '/cart/edit/' + cart_id : '/cart/add' %>" method="POST">
+          <input type="hidden" name="table_id" value="<%= table_id %>">
+          <input type="hidden" name="food_id" value="<%= food.food_id %>">
+
+          <!-- ขนาด -->
+          <% if (sizes && sizes.length > 0) { %>
+            <h4 class="mb-3 btn-head">เลือกขนาด</h4>
+            <% sizes.forEach(sz => { %>
+              <label class="size-option">
+                <input type="radio" name="size_id" value="<%= sz.size_id %>" 
+                  <%= selectedSize == sz.size_id ? "checked" : "" %> required>
+                <%= sz.size_name %> (+<%= sz.extra_price %> บาท)
+              </label>
+            <% }) %>
+          <% } else { %>
+            <input type="hidden" name="size_id" value="1">
+          <% } %>
+
+          <!-- ท็อปปิ้ง -->
+          <% if (toppings && toppings.length > 0) { %>
+            <h4 class="mb-3 btn-head">เลือกท็อปปิ้ง</h4>
+            <div class="row">
+              <% toppings.forEach(tp => { 
+                   const sel = selectedToppings.find(st => st.id == tp.topping_id);
+                   const qty = sel ? sel.qty : 1;
+                   const allowed = allowedToppings.includes(tp.topping_id);
+              %>
+                <div class="col-md-6 mb-3">
+                  <label class="topping-option w-100" style="<%= allowed ? '' : 'opacity:0.5;cursor:not-allowed;' %>">
+                    <div class="d-flex justify-content-between align-items-center">
+                      <span>
+                        <%= tp.topping_name %> (+<%= tp.topping_price %> บาท)
+                        <% if (!allowed) { %>
+                          <small style="color:red;">(ไม่สามารถเลือกได้)</small>
+                        <% } %>
+                      </span>
+                      <input type="checkbox" name="toppings" value="<%= tp.topping_id %>"
+                        <%= sel ? "checked" : "" %> <%= allowed ? "" : "disabled" %>>
+                    </div>
+
+                    <div class="qty-control mt-2">
+                      <button type="button" class="btn-qty" onclick="updateQty('<%= tp.topping_id %>', -1)" <%= allowed ? "" : "disabled" %>>-</button>
+                      <span id="qty_display_<%= tp.topping_id %>" class="qty-number"><%= qty %></span>
+                      <button type="button" class="btn-qty" onclick="updateQty('<%= tp.topping_id %>', 1)" <%= allowed ? "" : "disabled" %>>+</button>
+                    </div>
+
+                    <input type="hidden" id="qty_input_<%= tp.topping_id %>" 
+                           name="topping_qty_<%= tp.topping_id %>" value="<%= qty %>">
+                  </label>
+                </div>
+              <% }) %>
+            </div>
+          <% } %>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function updateQty(toppingId, change) {
+      const input = document.getElementById("qty_input_" + toppingId);
+      const display = document.getElementById("qty_display_" + toppingId);
+      let current = parseInt(input.value) || 1;
+      current += change;
+      if (current < 1) current = 1;
+      input.value = current;
+      display.innerText = current;
+    }
+  </script>
+</body>
+</html>

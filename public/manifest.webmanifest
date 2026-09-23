@@ -1,0 +1,9 @@
+{
+  "name": "Polar Snow POS",
+  "short_name": "PolarSnow",
+  "start_url": "/tables",
+  "display": "standalone",
+  "background_color": "#fefbf4",
+  "theme_color": "#6f7cff",
+  "icons": [{ "src": "/img/logo.jfif", "sizes": "any", "type": "image/jpeg" }]
+}

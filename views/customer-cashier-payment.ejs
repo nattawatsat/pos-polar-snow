@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>Cashier Payment</title>
+  <style>
+  body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      height: 100vh;
+      background: #fff8f4;
+      color: #6f7cff;
+      font-family: "Prompt", sans-serif;
+      text-align: center;
+      margin: 0;
+    }
+
+    /* ---------- เนื้อหาหลัก ---------- */
+    h1 {
+      font-size: 60px;
+      margin-bottom: 20px;
+    }
+
+    p {
+      font-size: 24px;
+    }
+  </style>
+  <script>
+    setTimeout(() => {
+      window.location.href = "/menu/<%= table_id %>";
+    }, <%= (typeof redirectSec !== 'undefined' ? redirectSec : 5) * 1000 %>);
+  </script>
+</head>
+<body>
+  <h1> ชำระเงินได้ที่แคชเชียร์</h1>
+  <p>โต๊ะ <%= table_id %> กรุณาชำระที่แคชเชียร์</p>
+</body>
+</html>

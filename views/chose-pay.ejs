@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="apple-touch-icon" href="/img/logo.jfif">
+  <title>เลือกวิธีการชำระเงิน</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css" />
+  <style>
+    body {
+      background-color: #fff8f4;
+      font-family: "Prompt", sans-serif;
+    }
+    .pay-container {
+      max-width: 900px;
+      margin: 60px auto;
+      background: #fff;
+      border: 2px solid #d9b8a3;
+      border-radius: 15px;
+      padding: 30px;
+      box-shadow: 0px 6px 12px rgba(0,0,0,0.1);
+    }
+    h2 {
+      color: #6f7cff;
+      font-size: 28px;
+      font-weight: bold;
+      margin-bottom: 30px;
+    }
+    .table-custom {
+      border-collapse: separate;
+      border-spacing: 0;
+      width: 100%;
+      overflow: hidden;
+      border-radius: 12px;
+    }
+    .table-custom thead {
+      background-color: #6f7cff;
+      color: white;
+      font-size: 18px;
+    }
+    .table-custom th, .table-custom td {
+      padding: 15px;
+      vertical-align: middle;
+    }
+    .table-custom tbody tr:nth-child(even) {
+      background-color: #f4f5ff;
+    }
+    .table-custom tbody tr:hover {
+      background-color: #e4e6ff;
+    }
+    .btn-big {
+      font-size: 20px;
+      font-weight: bold;
+      padding: 18px;
+      width: 100%;
+      border-radius: 12px;
+    }
+    .row-buttons {
+      margin-top: 30px;
+      margin-bottom: 30px;
+    }
+    .total-row {
+      background-color: #f0f0ff;
+      font-size: 18px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="pay-container">
+    <h2>เลือกวิธีการชำระเงิน</h2>
+
+    <table class="table table-custom">
+      <thead>
+        <tr>
+          <th>สินค้า</th>
+          <th class="text-end">ราคา</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if (items && items.length > 0) { %>
+          <% items.forEach(item => { %>
+            <tr>
+              <td>
+                <%= item.food_name %>
+                <% if (item.size_name) { %> (<%= item.size_name %>) <% } %><br>
+                <% if (item.toppings.length > 0) { %>
+                  <small>ท็อปปิ้ง: <%= item.toppings.join(", ") %></small><br>
+                <% } %>
+                <% if (item.note) { %>
+                  <small>หมายเหตุ: <%= item.note %></small>
+                <% } %>
+              </td>
+              <td class="text-end"><%= item.price %> บาท</td>
+            </tr>
+          <% }) %>
+          <tr class="total-row">
+            <td>รวมทั้งหมด</td>
+            <td class="text-end"><%= total %> บาท</td>
+          </tr>
+        <% } else { %>
+          <tr>
+            <td colspan="2" class="text-center">ยังไม่มีการสั่งสินค้า</td>
+          </tr>
+        <% } %>
+      </tbody>
+    </table>
+
+    <div class="row row-buttons">
+      <div class="col-md-6 mb-3">
+        <a href="/qr/<%= table_id %>" class="btn btn-success btn-big">
+           ชำระเงินที่โต๊ะ (QR Code)
+        </a>
+      </div>
+      <div class="col-md-6 mb-3">
+        <a href="/customer-cashier-payment/<%= table_id %>" class="btn btn-primary btn-big">
+        ชำระเงินที่แคชเชียร์
+      </a>
+      </div>
+    </div>
+
+    <!-- ปุ่มกลับ -->
+    <a href="/menu/<%= table_id %>" class="btn btn-pink btn-big">⬅ กลับไปหน้าสั่งอาหาร</a>
+  </div>
+</body>
+</html>

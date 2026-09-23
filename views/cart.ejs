@@ -1,0 +1,129 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="/img/logo.jfif" />
+    <title>ตะกร้าสินค้า</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/style.css" />
+    <style>
+      body {
+        background-color: #fff8f4;
+        font-family: "Prompt", sans-serif;
+      }
+      .cart-container {
+        background: #FEFAF3;
+        border-radius: 12px;
+        padding: 20px;
+        margin: 20px auto;
+        max-width: 900px;
+        box-shadow: 0px 2px 8px rgba(0,0,0,0.1);
+      }
+      .cart-header {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+      .cart-header img {
+        max-height: 100px;
+        margin-bottom: 10px;
+      }
+      .cart-item {
+        background: #ffdcd2;
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 15px;
+      }
+      .cart-item h5 {
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+      .cart-item ul {
+        margin: 0;
+        padding-left: 20px;
+      }
+      .btn-pink {
+        background: #f79ac0;
+        color: white;
+        font-weight: bold;
+        border-radius: 20px;
+        margin: 5px;
+        padding: 8px 25px;
+      }
+      .btn-pink:hover {
+        background: #f86aa0;
+      }
+      .btn-green {
+        background: #8cd67f;
+        color: white;
+        font-weight: bold;
+        border-radius: 20px;
+        margin: 5px;
+        padding: 8px 25px;
+      }
+      .btn-green:hover {
+        background: #66c259;
+      }
+      .note-text {
+    display: block;
+    white-space: normal;     
+    word-wrap: break-word;  
+    max-width: 300px;       
+  }
+    </style>
+  </head>
+  <body>
+    <div class="cart-container">
+      <div class="cart-header">
+        <img src="/img/logo.jfif" alt="Polar Snow Logo" style="border-radius: 5px;">
+        <h3>ตะกร้าสินค้า (โต๊ะ <%= table_id %>)</h3>
+      </div>
+
+      <% if (cart.length === 0) { %>
+        <p class="text-center">ยังไม่มีสินค้า</p>
+      <% } else { %>
+        <% let total = 0; %>
+        <% cart.forEach((item, idx) => { %>
+          <div class="cart-item">
+            <h5><%= idx+1 %>. <%= item.food_name %></h5>
+            <% let price = (item.food_price || 0) + (item.size_extra || 0) + ((item.toppings||[]).reduce((s,tp)=> s + (tp.price * (tp.qty || 1)), 0)); %>
+            <p><strong>ราคา:</strong> <%= price %> บาท</p>
+            <% total += price; %>
+
+            <% if (item.toppings.length > 0) { %>
+              <p><strong>ท็อปปิ้ง:</strong> 
+                <%= item.toppings.map(tp => tp.name + " x" + tp.qty).join(", ") %>
+              </p>
+            <% } %>
+
+            <% if (item.note) { %>
+              <p><strong class="note-text">หมายเหตุ:</strong> <%= item.note %></p>
+            <% } %>
+
+            <!-- ปุ่มปรับแต่ง -->
+            <a href="/customize/<%= item.food_id %>/<%= table_id %>?cart_id=<%= item.cart_id %>" 
+               class="btn btn-warning btn-sm">
+              ปรับแต่ง
+            </a>
+
+            <!-- ปุ่มลบ -->
+            <form action="/cart/delete/<%= item.cart_id %>/<%= table_id %>" method="POST" style="display:inline;">
+              <button class="btn btn-danger btn-sm">ลบ</button>
+            </form>
+          </div>
+        <% }) %>
+
+        <h4 class="text-center mt-3"> ยอดรวม: <%= total %> บาท</h4>
+      <% } %>
+
+      <div class="text-center mt-3">
+        <a href="/menu/<%= table_id %>" class="btn btn-green">กลับเมนู</a>
+      </div>
+    </div>
+  </body>
+</html>

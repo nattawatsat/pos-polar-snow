@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>Payment Complete</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      height: 100vh;
+      background: #fff8f4;
+      color: #6f7cff;
+      font-family: "Prompt", sans-serif;
+      text-align: center;
+      margin: 0;
+    }
+    .logo-left img {
+      height: 80px; 
+      border-radius: 16px;
+      object-fit: cover;
+    }
+
+    h1 {
+      font-size: 60px;
+      margin-bottom: 20px;
+    }
+
+    p {
+      font-size: 24px;
+    }
+  </style>
+  <script>
+    //  หลังจาก 5 วินาที redirect กลับไปหน้าเมนู
+    setTimeout(() => {
+      window.location.href = "/menu/<%= table_id %>";
+    }, <%= (typeof redirectSec !== 'undefined' ? redirectSec : 5) * 1000 %>);
+  </script>
+</head>
+<body>
+  <div class="logo-left">
+    <img src="/img/thanks_logo.jfif" alt="Polar Snow Logo">
+    <p class="logo-title">Polar Snow</p>
+  </div>
+  <h1> ขอบคุณที่ใช้บริการ</h1>
+  <p>โต๊ะ <%= table_id %> ชำระเงินเรียบร้อยแล้ว</p>
+</body>
+</html>

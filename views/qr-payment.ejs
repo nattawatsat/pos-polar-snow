@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <title>QR Payment</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      height: 100vh;
+      background: #fff8f4;
+      font-family: "Prompt", sans-serif;
+      margin: 0;
+    }
+
+    /* ---------- โลโก้และชื่อร้าน ---------- */
+    .logo-left {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px; /* เว้นห่างระหว่างโลโก้กับชื่อ */
+      margin-bottom: 25px;
+    }
+
+    .logo-left img {
+      height: 80px; 
+      border-radius: 16px;
+      object-fit: cover;
+    }
+
+    .logo-title {
+      color: #6f7cff;
+      font-size: 32px; /* ขยายตัวอักษร */
+      font-weight: 800;
+      font-family: "Prompt", sans-serif;
+      letter-spacing: 1px;
+    }
+
+    /* ---------- ส่วนเนื้อหา QR ---------- */
+    h2 {
+      color: #6f7cff;
+      margin: 10px 0 20px;
+    }
+
+    img.qr {
+      width: 300px;
+      height: 300px;
+      border: 8px solid #6f7cff;
+      border-radius: 12px;
+    }
+
+    p {
+      margin-top: 10px;
+      font-size: 18px;
+    }
+
+    .countdown {
+      font-size: 20px;
+      color: #d84f5f;
+      font-weight: bold;
+      margin-top: 8px;
+    }
+  </style>
+
+  <script>
+    let timeLeft = <%= typeof countdown !== 'undefined' ? countdown : 15 %>;
+    const interval = setInterval(() => {
+      const timer = document.getElementById('timer');
+      if (timeLeft > 0) {
+        timer.textContent = timeLeft;
+        timeLeft--;
+      } else {
+        clearInterval(interval);
+        window.location.href = "/qr-complete/<%= table_id %>";
+      }
+    }, 1000);
+  </script>
+</head>
+
+<body>
+  <!-- โลโก้ + ชื่อร้าน -->
+  <div class="logo-left">
+    <img src="/img/logo.jfif" alt="Polar Snow Logo">
+    <p class="logo-title">Polar Snow</p>
+  </div>
+
+  <!-- QR -->
+  <h2>โต๊ะ <%= table_id %> กรุณาสแกนเพื่อชำระเงิน</h2>
+  <img class="qr" src="<%= typeof qrImage !== 'undefined' ? qrImage : '/img/qr.png' %>" alt="QR Code">
+  <p>QR Code นี้จะหมดอายุภายใน 
+    <span class="countdown"><span id="timer"><%= typeof countdown !== 'undefined' ? countdown : 15 %></span> วินาที</span>
+  </p>
+</body>
+</html>
