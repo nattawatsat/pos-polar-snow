@@ -1,5 +1,9 @@
 # POS-Polar — ระบบ POS ร้าน Polar Snow (Refactored)
 
+> **Learning project** — สร้างเพื่อฝึก refactor ระบบ POS เดิมที่เป็น monolith
+> ให้เป็นสถาปัตยกรรมแยกชั้น (routes / services / repositories) พร้อมเพิ่ม
+> transactions, validation และ auth ไม่เกี่ยวข้องกับธุรกิจจริงใดๆ
+
 ระบบสั่งอาหารผ่านมือถือ + จอครัว + แคชเชียร์ แยกจากโปรเจกต์เดิม `P-05-app`
 (`index.js` ไฟล์เดียวยาว 909 บรรทัด) มาเป็นโครง MVC ที่แยก routes/services/repositories
 ชัดเจน ใช้ transaction กันข้อมูลพัง และมี validation ทุกเส้น
